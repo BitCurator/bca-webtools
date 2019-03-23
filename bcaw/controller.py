@@ -109,7 +109,7 @@ def file_handler(image_id, part_table, part_slot, encoded_filepath, view_type):
     If a file is selected the files contents as a binary payload is sent in
     the Response.
     """
-    file_path = urllib.unquote(encoded_filepath)
+    file_path = urllib.parse.unquote(encoded_filepath)
     partition = _found_or_404(Partition.by_image_table_and_slot(image_id, part_table, part_slot))
     fs_ele = _found_or_404(FileSysEle.from_partition(partition, file_path))
     # Check if we have a directory
@@ -159,7 +159,7 @@ def file_handler(image_id, part_table, part_slot, encoded_filepath, view_type):
 def download_file(image_id, part_table, part_slot, encoded_filepath):
     """Download the raw bytes for a given file."""
 
-    file_path = urllib.unquote(encoded_filepath)
+    file_path = urllib.parse.unquote(encoded_filepath)
     partition = _found_or_404(Partition.by_image_table_and_slot(image_id, part_table, part_slot))
     fs_ele = _found_or_404(FileSysEle.from_partition(partition, file_path))
     # Check if we have a directory

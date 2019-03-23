@@ -115,9 +115,9 @@ __apt_get_upgrade_noinput() {
 #   DESCRIPTION:  (DRY)
 #-------------------------------------------------------------------------------
 __pip_install_noinput() {
-    pip install --upgrade "$@"; return $?
+    #pip install --upgrade "$@"; return $?
     # Uncomment for Python 3
-    #pip3 install --upgrade $@; return $?
+    pip3 install --upgrade $@; return $?
 }
 
 #---  FUNCTION  ----------------------------------------------------------------
@@ -125,9 +125,9 @@ __pip_install_noinput() {
 #   DESCRIPTION:  (DRY)
 #-------------------------------------------------------------------------------
 __pip_pre_install_noinput() {
-    pip install --pre --upgrade "$@"; return $?
+    #pip install --pre --upgrade "$@"; return $?
     # Uncomment for Python 3
-    # pip3 install --pre --upgrade $@; return $?
+    pip3 install --pre --upgrade $@; return $?
 }
 
 
@@ -223,6 +223,11 @@ install_ubuntu_deps() {
 # Text extraction: antiword, poppler-utils
 # textract: python-dev libxml2-dev libxslt1-dev antiword unrtf poppler-utils pstotext tesseract-ocr flac ffmpeg lame libmad0 libsox-fmt-mp3 sox libjpeg-dev zlib1g-dev
 #
+#python
+#python-pip
+#python-dev
+#virtualenv
+#virtualenvwrapper
 
 install_ubuntu_packages() {
     packages="dkms
@@ -271,12 +276,10 @@ poppler-utils
 postgresql
 postgresql-server-dev-10
 pstotext
-python
-python-pip
-python-dev
+python3
 python3-pip
 python3-dev
-python-virtualenv
+python3-venv
 rabbitmq-server
 redis-server
 sox
@@ -285,11 +288,9 @@ swig
 swig3.0
 tesseract-ocr
 virtualbox-guest-utils
-virtualenv
-virtualenvwrapper
 unrtf
 uwsgi
-uwsgi-plugin-python
+uwsgi-plugin-python3
 zlib1g-dev"
 
     if [ "$@" = "dev" ]; then
@@ -320,9 +321,11 @@ install_ubuntu_pip_packages() {
 # Bokeh: beautifulsoup, colorama, boto, nose, mock, coverage, websocket-client, blaze, bokeh
 # Celery: celery
 #
+# setuptools virtualenvwrapper
 
-    pip_packages="flask
-        psycopg2
+    pip_packages="wheel
+        flask
+        psycopg2-binary
         Flask-SQLAlchemy
         flask-wtf
         celery
@@ -332,9 +335,10 @@ install_ubuntu_pip_packages() {
         python-magic
         textract
         spacy
-        shortuuid"
+        shortuuid
+	textacy"
 
-    pip_special_packages="textacy"
+#    pip_special_packages="textacy"
 
     source "$BCAW_ROOT/venv/bin/activate"
 
@@ -355,17 +359,17 @@ install_ubuntu_pip_packages() {
         fi
     done
 
-    # Prep environment for special packages, install cld2-cffi
-    env CC=/usr/bin/gcc-5 pip3 install -U cld2-cffi
-
-    for PACKAGE in $pip_special_packages; do
-        CURRENT_ERROR=0
-        echoinfo "Installed Python (special setup) Package: $PACKAGE"
-        __pip_pre_install_noinput $PACKAGE >> $LOG_BASE/bca-install.log 2>&1 || (let ERROR=ERROR+1 && let CURRENT_ERROR=1)
-        if [ $CURRENT_ERROR -eq 1 ]; then
-            echoerror "Python Package Install Failure: $PACKAGE"
-        fi
-    done
+#    # Prep environment for special packages, install cld2-cffi
+#    env CC=/usr/bin/gcc-5 pip3 install -U cld2-cffi
+#
+#    for PACKAGE in $pip_special_packages; do
+#        CURRENT_ERROR=0
+#        echoinfo "Installed Python (special setup) Package: $PACKAGE"
+#        __pip_pre_install_noinput $PACKAGE >> $LOG_BASE/bca-install.log 2>&1 || (let ERROR=ERROR+1 && let CURRENT_ERROR=1)
+#        if [ $CURRENT_ERROR -eq 1 ]; then
+#            echoerror "Python Package Install Failure: $PACKAGE"
+#        fi
+#    done
 
     if [ $ERROR -ne 0 ]; then
         echoerror
@@ -378,6 +382,7 @@ install_ubuntu_pip_packages() {
 
 install_source_packages() {
 
+    echoinfo "bitcurator-access-webtools: Activating Python 3 venv..."
     source "$BCAW_ROOT/venv/bin/activate"
 
     echoinfo "bitcurator-access-webtools: Setting JAVA_HOME and JCC_JDK"
@@ -402,8 +407,8 @@ install_source_packages() {
         # without this!
         sed -i "s/java-8-oracle/java-8-openjdk-amd64/g" setup.py
 
-        python setup.py build >> $LOG_BASE/bca-install.log 2>&1
-        python setup.py install >> $LOG_BASE/bca-install.log 2>&1
+        python3 setup.py build >> $LOG_BASE/bca-install.log 2>&1
+        python3 setup.py install >> $LOG_BASE/bca-install.log 2>&1
         popd >> $LOG_BASE/bca-install.log 2>&1
 
         # Edit the Makefile to uncomment the config info for Linux.
@@ -498,9 +503,9 @@ install_source_packages() {
   # Install The Sleuth Kit
   echoinfo "bitcurator-access-webtools: Building and installing The Sleuth Kit..."
         cd /tmp
-        wget https://github.com/sleuthkit/sleuthkit/archive/sleuthkit-4.4.1.tar.gz -O sleuthkit-4.4.1.tar.gz >> $LOG_BASE/bca-install.log 2>&1
+        wget https://github.com/sleuthkit/sleuthkit/releases/download/sleuthkit-4.4.1/sleuthkit-4.4.1.tar.gz -O sleuthkit-4.4.1.tar.gz >> $LOG_BASE/bca-install.log 2>&1
         tar zxvf sleuthkit-4.4.1.tar.gz >> $LOG_BASE/bca-install.log 2>&1
-        cd sleuthkit-sleuthkit-4.4.1
+        cd sleuthkit-4.4.1
         ./bootstrap >> $LOG_BASE/bca-install.log 2>&1
         ./configure >> $LOG_BASE/bca-install.log 2>&1
         make >> $LOG_BASE/bca-install.log 2>&1
@@ -508,14 +513,14 @@ install_source_packages() {
         sudo ldconfig
         # Clean up
         rm /tmp/sleuthkit-4.4.1.tar.gz
-        rm -rf /tmp/sleuthkit-sleuthkit-4.4.1
+        rm -rf /tmp/sleuthkit-4.4.1
 
   # Install TSK Python bindings
   echoinfo "bitcurator-access-webtools: Building and installing pytsk..."
         cd /tmp
-        cp /vagrant/externals/pytsk-20160111-1.tar.gz .
-        tar zxvf pytsk-20160111-1.tar.gz >> $LOG_BASE/bca-install.log 2>&1
-        cd pytsk
+        wget -q https://github.com/py4n6/pytsk/releases/download/20160721/pytsk3-20160721.tar.gz
+        tar -zxf pytsk3-20160721.tar.gz >> $HOME/bitcurator-install.log 2>&1
+        cd pytsk3-20160721
         "$BCAW_ROOT/venv/bin/python" setup.py build >> $LOG_BASE/bca-install.log 2>&1
         #python setup.py build >> $LOG_BASE/bca-install.log 2>&1
         #sudo python setup.py install >> $LOG_BASE/bca-install.log 2>&1
@@ -523,22 +528,36 @@ install_source_packages() {
         "$BCAW_ROOT/venv/bin/python" setup.py install >> $LOG_BASE/bca-install.log 2>&1
 
         # Clean up
-        rm -rf /tmp/pytsk
+        rm -rf /tmp/pytsk3-20160721
+
+#  echoinfo "bitcurator-access-webtools: Building and installing pytsk..."
+#        cd /tmp
+#        cp /vagrant/externals/pytsk-20160111-1.tar.gz .
+#        tar zxvf pytsk-20160111-1.tar.gz >> $LOG_BASE/bca-install.log 2>&1
+#        cd pytsk
+#        "$BCAW_ROOT/venv/bin/python" setup.py build >> $LOG_BASE/bca-install.log 2>&1
+#        #python setup.py build >> $LOG_BASE/bca-install.log 2>&1
+#        #sudo python setup.py install >> $LOG_BASE/bca-install.log 2>&1
+#        # Modified for use in virtualenv
+#        "$BCAW_ROOT/venv/bin/python" setup.py install >> $LOG_BASE/bca-install.log 2>&1
+#
+#        # Clean up
+#        rm -rf /tmp/pytsk
 }
 
 get_spacy_language_models() {
   echoinfo "bitcurator-access-webtools: Getting language model(s) for spacy..."
   cd /tmp
   source "$BCAW_ROOT/venv/bin/activate"
-  python -m spacy download en
+  python3 -m spacy download en
 }
 
 install_dfvfs() {
   echoinfo "bitcurator-access-webtools: Getting dfvfs requirements and installing dfvfs..."
   cd /tmp
   curl -O https://raw.githubusercontent.com/log2timeline/dfvfs/master/requirements.txt
-  pip install -r requirements.txt
-  pip install dfvfs
+  pip3 install -r requirements.txt
+  pip3 install dfvfs
 }
 
 create_virtualenv() {
@@ -550,7 +569,9 @@ create_virtualenv() {
    mkdir "$BCAW_ROOT"
    chmod -R 777 "$BCAW_ROOT"
    chown -R www-data:www-data "$BCAW_ROOT"
-   virtualenv "$BCAW_ROOT/venv"
+   #virtualenv "$BCAW_ROOT/venv"
+   #source "$BCAW_ROOT/venv/bin/activate"
+   python3 -m venv "$BCAW_ROOT/venv"
    source "$BCAW_ROOT/venv/bin/activate"
 }
 
@@ -759,7 +780,7 @@ install_source_packages
 get_spacy_language_models
 
 # Digital Forensics Virtual File System suite install
-# install_dfvfs
+install_dfvfs
 
 # Copy over disk images
 copy_disk_images
