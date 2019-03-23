@@ -1,0 +1,11 @@
+Basic info on using DFVFS:
+
+http://www.learndfir.com/2016/04/07/daily-blog-367-automating-dfir-with-dfvfs-part-1/
+
+Additional blog entries:
+
+https://www.hecfblog.com/search/label/dfvfs
+
+DFVFS extractor on Github (Python 2 tested only):
+
+https://github.com/blardy/dfvfs_extractor
