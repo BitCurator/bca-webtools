@@ -115,9 +115,8 @@ __apt_get_upgrade_noinput() {
 #   DESCRIPTION:  (DRY)
 #-------------------------------------------------------------------------------
 __pip_install_noinput() {
-    pip install --upgrade "$@"; return $?
-    # Uncomment for Python 3
-    #pip3 install --upgrade $@; return $?
+    #pip install --upgrade "$@"; return $?
+    pip3 install --upgrade $@; return $?
 }
 
 #---  FUNCTION  ----------------------------------------------------------------
@@ -125,9 +124,8 @@ __pip_install_noinput() {
 #   DESCRIPTION:  (DRY)
 #-------------------------------------------------------------------------------
 __pip_pre_install_noinput() {
-    pip install --pre --upgrade "$@"; return $?
-    # Uncomment for Python 3
-    # pip3 install --pre --upgrade $@; return $?
+    #pip install --pre --upgrade "$@"; return $?
+    pip3 install --pre --upgrade $@; return $?
 }
 
 
@@ -271,9 +269,7 @@ poppler-utils
 postgresql
 postgresql-server-dev-10
 pstotext
-python
-python-pip
-python-dev
+python3
 python3-pip
 python3-dev
 python-virtualenv
@@ -289,7 +285,7 @@ virtualenv
 virtualenvwrapper
 unrtf
 uwsgi
-uwsgi-plugin-python
+uwsgi-plugin-python3
 zlib1g-dev"
 
     if [ "$@" = "dev" ]; then
@@ -402,8 +398,8 @@ install_source_packages() {
         # without this!
         sed -i "s/java-8-oracle/java-8-openjdk-amd64/g" setup.py
 
-        python setup.py build >> $LOG_BASE/bca-install.log 2>&1
-        python setup.py install >> $LOG_BASE/bca-install.log 2>&1
+        python3 setup.py build >> $LOG_BASE/bca-install.log 2>&1
+        python3 setup.py install >> $LOG_BASE/bca-install.log 2>&1
         popd >> $LOG_BASE/bca-install.log 2>&1
 
         # Edit the Makefile to uncomment the config info for Linux.
@@ -530,11 +526,11 @@ install_source_packages() {
         cp /vagrant/externals/pytsk-20160111-1.tar.gz .
         tar zxvf pytsk-20160111-1.tar.gz >> $LOG_BASE/bca-install.log 2>&1
         cd pytsk
-        "$BCAW_ROOT/venv/bin/python" setup.py build >> $LOG_BASE/bca-install.log 2>&1
+        "$BCAW_ROOT/venv/bin/python3" setup.py build >> $LOG_BASE/bca-install.log 2>&1
         #python setup.py build >> $LOG_BASE/bca-install.log 2>&1
         #sudo python setup.py install >> $LOG_BASE/bca-install.log 2>&1
         # Modified for use in virtualenv
-        "$BCAW_ROOT/venv/bin/python" setup.py install >> $LOG_BASE/bca-install.log 2>&1
+        "$BCAW_ROOT/venv/bin/python3" setup.py install >> $LOG_BASE/bca-install.log 2>&1
 
         # Clean up
         rm -rf /tmp/pytsk
@@ -544,7 +540,7 @@ get_spacy_language_models() {
   echoinfo "bitcurator-access-webtools: Getting language model(s) for spacy..."
   cd /tmp
   source "$BCAW_ROOT/venv/bin/activate"
-  python -m spacy download en
+  python3 -m spacy download en
 }
 
 install_dfvfs() {

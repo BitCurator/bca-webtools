@@ -130,7 +130,7 @@ class FullTextSearcher(object):
         try:
             if self.searcher is None:
                 self.searcher = IndexSearcher(DirectoryReader.open(self.store))
-        except lucene.JavaError, _je:
+        except lucene.JavaError as _je:
             logging.exception("No Lucene index found at %s", self.store)
         return self
 

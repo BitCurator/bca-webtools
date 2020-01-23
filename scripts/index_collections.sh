@@ -6,4 +6,4 @@ source venv/bin/activate
 # Set config format to disable logging debug, comment out for full logging
 export BCAW_CONFIG='analyser'
 # Run the analyser
-python -m bcaw.image_analyser
+python3 -m bcaw.image_analyser
