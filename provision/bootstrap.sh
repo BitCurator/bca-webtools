@@ -272,7 +272,7 @@ pstotext
 python3
 python3-pip
 python3-dev
-python-virtualenv
+python3-venv
 rabbitmq-server
 redis-server
 sox
@@ -560,7 +560,7 @@ create_virtualenv() {
    mkdir "$BCAW_ROOT"
    chmod -R 777 "$BCAW_ROOT"
    chown -R www-data:www-data "$BCAW_ROOT"
-   virtualenv "$BCAW_ROOT/venv"
+   python3 -m venv "$BCAW_ROOT/venv"
    source "$BCAW_ROOT/venv/bin/activate"
 }
 
