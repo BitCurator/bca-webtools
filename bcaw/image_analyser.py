@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=UTF-8
 #
 # BitCurator Access Webtools (Disk Image Access for the Web)
@@ -107,7 +107,7 @@ class DbSynch(object):
                                  part.slot, image.id, image_file.path)
                     try:
                         Partition.add(part)
-                    except IntegrityError, _:
+                    except IntegrityError as _:
                         logging.exception("Duplicate partition detected for" \
                                           "image id: %s, partition slot: %d",
                                           image.id, part.slot)

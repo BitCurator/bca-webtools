@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=UTF-8
 #
 # BitCurator Access Webtools (Disk Image Access for the Web)

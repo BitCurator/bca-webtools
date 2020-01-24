@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=UTF-8
 #
 # BitCurator Access Webtools (Disk Image Access for the Web)
@@ -299,7 +299,7 @@ class ImageFile(object):
                 finally:
                     os.umask(umask_original)
                 # Open file handle and write to file
-                with os.fdopen(fdesc, 'w') as fout:
+                with os.fdopen(fdesc, 'wb') as fout:
                     try:
                         procout = subprocess.check_output(cmd, stderr=subprocess.PIPE, shell=True)
                         fout.write(procout)

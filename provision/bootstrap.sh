@@ -317,7 +317,8 @@ install_ubuntu_pip_packages() {
 # Celery: celery
 #
 
-    pip_packages="flask
+    pip_packages="wheel
+        flask
         psycopg2
         Flask-SQLAlchemy
         flask-wtf
@@ -352,16 +353,16 @@ install_ubuntu_pip_packages() {
     done
 
     # Prep environment for special packages, install cld2-cffi
-    env CC=/usr/bin/gcc-5 pip3 install -U cld2-cffi
+    #env CC=/usr/bin/gcc-5 pip3 install -U cld2-cffi
 
-    for PACKAGE in $pip_special_packages; do
-        CURRENT_ERROR=0
-        echoinfo "Installed Python (special setup) Package: $PACKAGE"
-        __pip_pre_install_noinput $PACKAGE >> $LOG_BASE/bca-install.log 2>&1 || (let ERROR=ERROR+1 && let CURRENT_ERROR=1)
-        if [ $CURRENT_ERROR -eq 1 ]; then
-            echoerror "Python Package Install Failure: $PACKAGE"
-        fi
-    done
+    #for PACKAGE in $pip_special_packages; do
+    #    CURRENT_ERROR=0
+    #    echoinfo "Installed Python (special setup) Package: $PACKAGE"
+    #    __pip_pre_install_noinput $PACKAGE >> $LOG_BASE/bca-install.log 2>&1 || (let ERROR=ERROR+1 && let CURRENT_ERROR=1)
+    #    if [ $CURRENT_ERROR -eq 1 ]; then
+    #        echoerror "Python Package Install Failure: $PACKAGE"
+    #    fi
+    #done
 
     if [ $ERROR -ne 0 ]; then
         echoerror
