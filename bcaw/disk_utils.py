@@ -419,7 +419,7 @@ class FileSysEle(object):
         """Creates a new FileSysEle instance from the supplied params"""
         details = EleDetails(info.meta.mode, info.meta.mtime, info.meta.atime,
                              info.meta.ctime)
-        ele = cls(os.path.join(path, info.name.name), info.meta.size, details, info.meta.addr,
+        ele = cls(os.path.join(path, (info.name.name).decode()), info.meta.size, details, info.meta.addr,
                   is_dir(info.meta.type), is_ele_deleted(info))
         return ele
 
